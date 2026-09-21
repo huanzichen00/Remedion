@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
-	"remedion/internal/provider/docker"
+	"fmt"
+	"github.com/huanzichen00/remedion/internal/provider/docker"
+	"log"
 	"time"
 )
 
@@ -17,5 +19,9 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
-	provider.Ping(ctx)
+	if err := provider.Ping(ctx); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("docker daemon is reachable")
 }

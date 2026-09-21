@@ -1,4 +1,4 @@
-module remedion
+module github.com/huanzichen00/remedion
 
 go 1.26.2
 
