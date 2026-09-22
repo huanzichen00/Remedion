@@ -29,6 +29,9 @@ func (s *Service) Observe(ctx context.Context, target string) (Observation, erro
 	}
 
 	logs, err := s.provider.Logs(ctx, target, s.logLimit)
+	if err != nil {
+		return Observation{}, err
+	}
 
 	return Observation{
 		Container:  info,

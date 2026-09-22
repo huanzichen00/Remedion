@@ -22,8 +22,11 @@ func (p *Provider) Inspect(ctx context.Context, target string) (observe.Containe
 	health := "none"
 	oomKilled := false
 
-	if container.State != nil && container.State.Health != nil {
+	if container.Config != nil {
 		image = container.Config.Image
+	}
+
+	if container.State != nil {
 		state = string(container.State.Status)
 		oomKilled = container.State.OOMKilled
 		if container.State.Health != nil {
