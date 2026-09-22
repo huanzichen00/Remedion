@@ -17,20 +17,24 @@ func (p *Provider) Inspect(ctx context.Context, target string) (observe.Containe
 
 	container := inspectResult.Container
 
+	state := ""
 	health := "none"
+	oomKilled := false
 
 	if container.State != nil && container.State.Health != nil {
+		state = string(container.State.Status)
 		health = string(container.State.Health.Status)
+		oomKilled = container.State.OOMKilled
 	}
 
 	info := observe.ContainerInfo{
 		ID:           container.ID,
 		Name:         strings.TrimPrefix(container.Name, "/"),
 		Image:        container.Config.Image,
-		State:        string(container.State.Status),
+		State:        state,
 		Health:       health,
 		RestartCount: container.RestartCount,
-		OOMKilled:    container.State.OOMKilled,
+		OOMKilled:    oomKilled,
 	}
 
 	return info, nil
