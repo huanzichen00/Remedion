@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/huanzichen00/remedion/internal/observe"
 	"github.com/huanzichen00/remedion/internal/provider/docker"
 )
 
@@ -20,19 +21,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
-	if err := provider.Ping(ctx); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("docker daemon is reachable")
-
-	metrics, err := provider.Stats(ctx, "remedion-deno")
+	service := observe.NewService(provider, 10)
+	observation, err := service.Observe(ctx, "remedion-demo")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("%+v", metrics)
-
-	logs, err := provider.Logs(ctx, "remedion-logs", 10)
-	fmt.Println(logs)
+	fmt.Printf("%+v", observation)
 }
