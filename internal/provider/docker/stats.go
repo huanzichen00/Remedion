@@ -3,6 +3,7 @@ package docker
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/huanzichen00/remedion/internal/observe"
 	"github.com/moby/moby/api/types/container"
@@ -15,22 +16,22 @@ func (p *Provider) Stats(ctx context.Context, target string) (observe.Metrics, e
 		IncludePreviousSample: true,
 	})
 	if err != nil {
-		return observe.Metrics{}, err
+		return observe.Metrics{}, fmt.Errorf("get stats for container %q: %w", target, err)
 	}
+	defer result.Body.Close()
 
 	var stats container.StatsResponse
 
 	err = json.NewDecoder(result.Body).Decode(&stats)
 	if err != nil {
-		return observe.Metrics{}, err
+		return observe.Metrics{}, fmt.Errorf("decode stats for contianer %q: %w", target, err)
 	}
-	defer result.Body.Close()
 
 	memUsage := stats.MemoryStats.Usage
 	memLimit := stats.MemoryStats.Limit
 	var memPercent float64
 	if memLimit > 0 {
-		memPercent = float64(memUsage) / float64(memLimit)
+		memPercent = float64(memUsage) / float64(memLimit) * 100
 	}
 
 	cpuPercent := calculateCPUPercent(stats)
