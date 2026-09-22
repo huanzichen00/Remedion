@@ -24,7 +24,7 @@ func (p *Provider) Stats(ctx context.Context, target string) (observe.Metrics, e
 
 	err = json.NewDecoder(result.Body).Decode(&stats)
 	if err != nil {
-		return observe.Metrics{}, fmt.Errorf("decode stats for contianer %q: %w", target, err)
+		return observe.Metrics{}, fmt.Errorf("decode stats for container %q: %w", target, err)
 	}
 
 	memUsage := stats.MemoryStats.Usage

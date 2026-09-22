@@ -32,4 +32,7 @@ func main() {
 	}
 
 	fmt.Printf("%+v", metrics)
+
+	logs, err := provider.Logs(ctx, "remedion-logs", 10)
+	fmt.Println(logs)
 }
