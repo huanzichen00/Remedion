@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/huanzichen00/remedion/internal/incident"
 	"github.com/huanzichen00/remedion/internal/observe"
 	"github.com/huanzichen00/remedion/internal/provider/docker"
 )
@@ -28,4 +29,14 @@ func main() {
 	}
 
 	fmt.Printf("%+v", observation)
+
+	detector := incident.NewDetector(90, 90)
+
+	inc, ok := detector.Detect(observation)
+	if !ok {
+		fmt.Println("no incident detected")
+		return
+	}
+
+	fmt.Printf("incident detected: %+v\n", inc)
 }
