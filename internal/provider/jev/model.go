@@ -16,10 +16,10 @@ type SystemOneResponse struct {
 
 type Usage struct {
 	InputTokens  int `json:"input_tokens"`
-	OutputTokens int `jsoon:"output_tokens"`
+	OutputTokens int `json:"output_tokens"`
 }
 
-type ChoiceOption struct {
+type ChoiceQuestion struct {
 	Type         string            `json:"type"`
 	Instructions string            `json:"instructions,omitempty"`
 	Criteria     map[string]string `json:"criteria"`
