@@ -67,10 +67,10 @@ func buildRequest(inc incident.Incident) SystemOneRequest {
 	}
 }
 
-func (c *Client) Judge(ctx context.Context, inc incident.Incident) (decision.Decision, error) {
-	// 编译期检查 *jev.Client 是否实现 decision.Judge
-	var _ decision.Judge = (*Client)(nil)
+// 编译期检查 *jev.Client 是否实现 decision.Judge
+var _ decision.Judge = (*Client)(nil)
 
+func (c *Client) Judge(ctx context.Context, inc incident.Incident) (decision.Decision, error) {
 	var result decision.Decision
 
 	req := buildRequest(inc)
