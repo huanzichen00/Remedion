@@ -22,18 +22,22 @@ func (d *Detector) Detect(obs observe.Observation) (*Incident, bool) {
 	var signals []Signal
 
 	if obs.Container.State != "running" {
-		signals = append(signals, Signal{SignalNotRunning})
+		signals = append(signals, Signal{Type: SignalNotRunning})
 	}
 	if obs.Container.Health == "unhealthy" {
-		signals = append(signals, Signal{SignalUnhealthy})
+		signals = append(signals, Signal{Type: SignalUnhealthy})
 	}
 
 	if obs.Container.OOMKilled {
-		signals = append(signals, Signal{SignalOOMKilled})
+		signals = append(signals, Signal{Type: SignalOOMKilled})
 	}
 
-	if obs.Metrics.CPUPercent >= 90 {
-		signals = append(signals, Signal{SignalHighCPU})
+	if obs.Metrics.CPUPercent >= d.cpuThreshold {
+		signals = append(signals, Signal{Type: SignalHighCPU})
+	}
+
+	if obs.Metrics.MemoryPercent >= d.memoryThreshold {
+		signals = append(signals, Signal{Type: SignalHighMemory})
 	}
 
 	if len(signals) == 0 {
@@ -41,7 +45,7 @@ func (d *Detector) Detect(obs observe.Observation) (*Incident, bool) {
 	}
 
 	return &Incident{
-		ContainerID:   obs.Container.Name,
+		ContainerID:   obs.Container.ID,
 		ContainerName: obs.Container.Name,
 
 		Signals:     signals,
