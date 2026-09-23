@@ -8,6 +8,6 @@ const (
 )
 
 type Recommendation struct {
-	Action               Action
-	RequireHumanApproval bool
+	Action                Action
+	RequiresHumanApproval bool
 }

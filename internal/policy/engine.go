@@ -20,7 +20,7 @@ func (e *Engine) Evaluate(dec decision.Decision) Recommendation {
 	}
 
 	return Recommendation{
-		Action:               ActionRestartContainer,
-		RequireHumanApproval: true,
+		Action:                ActionRestartContainer,
+		RequiresHumanApproval: true,
 	}
 }
