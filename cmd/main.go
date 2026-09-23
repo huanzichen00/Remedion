@@ -4,11 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
+	"github.com/huanzichen00/remedion/internal/decision"
 	"github.com/huanzichen00/remedion/internal/incident"
 	"github.com/huanzichen00/remedion/internal/observe"
 	"github.com/huanzichen00/remedion/internal/provider/docker"
+	"github.com/huanzichen00/remedion/internal/provider/jev"
 )
 
 func main() {
@@ -39,4 +42,19 @@ func main() {
 	}
 
 	fmt.Printf("incident detected: %+v\n", inc)
+
+	apiKey := os.Getenv("TYPESAFE_API_KEY")
+	if apiKey == "" {
+		log.Fatal("TYPESAFE_API_KEY is not set")
+	}
+
+	jevClient := jev.NewClient(apiKey)
+	decisionService := decision.NewService(jevClient)
+
+	result, err := decisionService.Decide(ctx, *inc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("decision: %+v\n", result)
 }
