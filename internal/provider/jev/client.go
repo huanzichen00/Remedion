@@ -54,7 +54,7 @@ func (c *Client) systemOne(ctx context.Context, input SystemOneRequest) (SystemO
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= http.StatusBadRequest {
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		responseBody, readErr := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
 		if readErr != nil {
 			return result, fmt.Errorf("read Jev error response (HTTP %d): %w", resp.StatusCode, readErr)
