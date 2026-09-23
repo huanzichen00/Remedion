@@ -16,48 +16,55 @@ func TestClientJudge(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			if r.Method != http.MethodPost {
-				t.Fatalf("method = %s, want POST", r.Method)
+				t.Errorf("method = %s, want POST", r.Method)
+				return
 			}
 
 			if r.URL.Path != "/v1/systemone" {
-				t.Fatalf(
+				t.Errorf(
 					"path = %s, want /v1/systemone",
 					r.URL.Path,
 				)
+				return
 			}
 
 			if got := r.Header.Get("Authorization"); got != "Bearer test-api-key" {
-				t.Fatalf(
+				t.Errorf(
 					"Authorization = %q, want %q",
 					got,
 					"Bearer test-api-key",
 				)
+				return
 			}
 
 			if got := r.Header.Get("Content-Type"); got != "application/json" {
-				t.Fatalf(
+				t.Errorf(
 					"Content-Type = %q, want application/json",
 					got,
 				)
+				return
 			}
 
 			var req SystemOneRequest
 			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-				t.Fatalf("decode request: %v", err)
+				t.Errorf("decode request: %v", err)
+				return
 			}
 
 			if req.Model != "jev-latest" {
-				t.Fatalf(
+				t.Errorf(
 					"model = %q, want jev-latest",
 					req.Model,
 				)
+				return
 			}
 
 			if len(req.Questions) != 3 {
-				t.Fatalf(
+				t.Errorf(
 					"questions = %d, want 3",
 					len(req.Questions),
 				)
+				return
 			}
 
 			w.Header().Set("Content-Type", "application/json")
