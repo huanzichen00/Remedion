@@ -1,6 +1,9 @@
 package jev
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 type Client struct {
 	baseURL    string
@@ -11,9 +14,9 @@ type Client struct {
 func NewClient(apiKey string) *Client {
 	return &Client{
 		baseURL: "https://api.typesafe.ai",
-		apiKey: apiKey
+		apiKey:  apiKey,
 		httpClient: &http.Client{
-			Timeout: 10 * time.Second
+			Timeout: 10 * time.Second,
 		},
 	}
 }
